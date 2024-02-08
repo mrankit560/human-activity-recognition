@@ -1,3 +1,4 @@
+import gdown
 import streamlit as st
 from io import StringIO
 import pandas as pd
@@ -24,9 +25,33 @@ def main():
             "Bivariate Analysis-Activity VS Accelerometer Readings"]
     )
     st.title('HUMAN ACTIVITY RECOGNITION')
+    gdrive_url = st.text_input("https://drive.google.com/file/d/14RkZYl9BdzFaOpZimL9FPRpIrWGEsbMY/view")
     uploaded_file = st.file_uploader("Choose data file")
-    if uploaded_file is not None:
-            df = pd.read_csv(uploaded_file)
+    if gdrive_url:
+        # Assuming the URL is a shareable link of the format ending with '...?usp=sharing'
+        gdrive_id = gdrive_url.split('/')[-2]
+        gdown_url = f'https://drive.google.com/uc?id={gdrive_id}'
+        output = 'output.csv'  # The local file name to save the downloaded file
+
+        # Download the file from the given Google Drive link
+        gdown.download(gdown_url, output, quiet=False)
+        
+        # Now read the downloaded file into a pandas DataFrame
+        df = pd.read_csv(output)
+        # Your existing code to process the dataframe
+        # ...
+        # The rest of your Streamlit code follows here
+    if gdrive_url:
+            gdrive_id = gdrive_url.split('/')[-2]
+            gdown_url = f'https://drive.google.com/uc?id={gdrive_id}'
+            output = 'output.csv'  # The local file name to save the downloaded file
+
+            # Download the file from the given Google Drive link
+            gdown.download(gdown_url, output, quiet=False)
+        
+            # Now read the downloaded file into a pandas DataFrame
+            df = pd.read_csv(output)
+           
             assert  pd.notnull(df).all().all(),"The has nulls" # check if the df has nulls
             st.write(df)
             assert df.shape[1] == 14, "Expected 14 columns" # else activity may cause error

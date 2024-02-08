@@ -1,0 +1,5 @@
+mlflow
+pytest
+scikit-learn==0.24.1
+seaborn
+streamlit
